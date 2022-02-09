@@ -7,6 +7,12 @@ import java.util.Properties;
 
 public class BotSetting {
 
+    /*
+    В классе BotSettings используется порождающий шаблон
+    проектирования СИНГЛТОН, служит он для того, чтобы не было
+    возможности создать несколько экземпляров класса в одном потоке.
+     */
+
     public static final String PATH_TO_PROPERTIES = "src/main/resources/config.properties";
     private static BotSetting instance;
     private Properties properties;
@@ -23,7 +29,6 @@ public class BotSetting {
     }
 
     public static BotSetting getInstance() {
-
 
 
         if (instance == null)
