@@ -16,12 +16,15 @@ import java.util.Properties;
 
 
 public  class Bot extends TelegramLongPollingBot {
+
+    private final static BotSetting botSettings = BotSetting.getInstance();
+
     public String getBotUsername() {
-        return "districts_bot";
+         return botSettings.getUserName();
     }
 
     public String getBotToken() {
-        return Main.getBotTokenProp();
+        return botSettings.getToken();
     }
 
     public  void sendMsg(SendMessage sendMessage) {

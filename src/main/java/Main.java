@@ -23,32 +23,6 @@ public class Main {
             e.printStackTrace();
         }
 
-           }
-
-    public static String getBotTokenProp() {
-        try {
-
-            FileInputStream fileInputStream = new FileInputStream(PATH_TO_PROPERTIES);
-            Properties prop = new Properties();
-            prop.load(fileInputStream);
-            System.out.println("tokenBot");
-            return prop.getProperty("tokenBot");
-        } catch (IOException e) {
-            e.fillInStackTrace().toString();
-        }
-        return null;
     }
 
-    public static String genUserNameBot() {
-        try {
-            FileInputStream fileInputStream = new FileInputStream(PATH_TO_PROPERTIES);
-            Properties prop = new Properties();
-            prop.load(fileInputStream);
-            System.out.println("userNameBot");
-            return prop.getProperty("nameBot");
-        } catch (IOException e) {
-            e.fillInStackTrace().toString();
-        }
-        return null;
-    }
 }
