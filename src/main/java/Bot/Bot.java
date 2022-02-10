@@ -80,9 +80,20 @@ public class Bot extends TelegramLongPollingBot {
                 break;
                 case IMAGE: sendMessage(update.getMessage().getChatId(), "Ещё не работает");
                 break;
-                case TEXT: 
+                case TEXT:
                     break;
+            }} else if (update.hasCallbackQuery()) {
+            try {
+                try {
+                    processCallbackQuerry(update.getCallbackQuery().getMessage().getChatId(), update);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+        }
         }
 //        if (update.hasMessage()) {
 //            if (update.getMessage().hasText()) {
@@ -112,7 +123,7 @@ public class Bot extends TelegramLongPollingBot {
 //            }
 //
 //        }
-    }
+    
     // проверка собщения на ТИП
     private CheckMessageType getMassageType (Update update){
         CheckMessageType checkMessageType = null;
