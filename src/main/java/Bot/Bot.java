@@ -29,7 +29,8 @@ public class Bot extends TelegramLongPollingBot {
         return botSettings.getToken();
     }
 
-    public void sendMsg(SendMessage sendMessage) {
+
+    public void sendMessage(SendMessage sendMessage) {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
@@ -50,7 +51,7 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendImage(Long chatID, String patch){
+    public void sendImage(Long chatID, String patch) {
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setPhoto(new InputFile(new File(patch)));
         sendPhoto.setChatId(chatID.toString());
@@ -61,28 +62,26 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
-    private static final String beginCommandSymbol = "/";
-    private static final String getStartCommandName = "start";
-    private static final String getStopCommandName = "stop";
-    private static final String getHelpCommandName = "help";
     private static final String getWeatherName = "weather";
     private static final String getNewsName = "news";
 
 
     public void onUpdateReceived(Update update) {
 
-        if (update.hasMessage()){
+        if (update.hasMessage()) {
             CheckMessageType checkMessageType = getMassageType(update);
-            switch (checkMessageType){
-                case COMMAND: beginCommandsSymbol(update);
-                break;
-                case IMAGE: sendMessage(update.getMessage().getChatId(), "Ещё не работает");
-                break;
+            switch (checkMessageType) {
+                case COMMAND:
+                    beginCommandsSymbol(update);
+                    break;
+                case IMAGE:
+                    sendMessage(update.getMessage().getChatId(), "Ещё не работает");
+                    break;
                 case TEXT:
                     break;
-            }} else if (update.hasCallbackQuery()) {
+            }
+        } else if (update.hasCallbackQuery()) {
             try {
                 try {
                     processCallbackQuerry(update.getCallbackQuery().getMessage().getChatId(), update);
@@ -94,7 +93,7 @@ public class Bot extends TelegramLongPollingBot {
             }
 
         }
-        }
+    }
 //        if (update.hasMessage()) {
 //            if (update.getMessage().hasText()) {
 //                System.out.println();
@@ -123,9 +122,9 @@ public class Bot extends TelegramLongPollingBot {
 //            }
 //
 //        }
-    
+
     // проверка собщения на ТИП
-    private CheckMessageType getMassageType (Update update){
+    private CheckMessageType getMassageType(Update update) {
         CheckMessageType checkMessageType = null;
         if (update.getMessage().getPhoto() != null)
             checkMessageType = CheckMessageType.IMAGE;
@@ -142,13 +141,13 @@ public class Bot extends TelegramLongPollingBot {
     public void beginCommandsSymbol(Update update) {
         switch (update.getMessage().getText()) {
             case "/help":
-                sendMsg(proccesHelpCommand(update.getMessage().getChatId()));
+                sendMessage(proccesHelpCommand(update.getMessage().getChatId()));
                 break;
             case "/start":
-                sendMsg(setStartCommand(update.getMessage().getChatId()));
+                sendMessage(setStartCommand(update.getMessage().getChatId()));
                 break;
             case "/stop":
-                sendMsg(processStopCommand(update.getMessage().getChatId()));
+                sendMessage(processStopCommand(update.getMessage().getChatId()));
                 break;
         }
 
@@ -156,6 +155,8 @@ public class Bot extends TelegramLongPollingBot {
 
     public SendMessage setStartCommand(long chatID) {
         System.err.println("procces StartCommand");
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
         inlineKeyboardButton1.setText("Новости ( не работает)");
@@ -207,22 +208,20 @@ public class Bot extends TelegramLongPollingBot {
                 execute(OpenWeatherMapJsonParser.selectCountry(update.getCallbackQuery().getMessage().getChatId()));
                 break;
             case getNewsName:
-                SendMessage sendMessage = new SendMessage();
-                sendMessage.setChatId(update.getCallbackQuery().getMessage().getChatId().toString());
-                execute(sendMessage);
+                sendMessage(update.getCallbackQuery().getMessage().getChatId(), "Ешё не работает");
                 break;
             case "626081":
                 SendMessage sendMessage1 = new SendMessage();
                 sendMessage1.setChatId(update.getCallbackQuery().getMessage().getChatId().toString());
                 sendMessage1.setText(Parser.parseWeather(OpenWeatherMapJsonParser.downloadJsonRawData("626081")));
-                sendMsg(sendMessage1);
+                sendMessage(sendMessage1);
 
                 break;
             case "620391":
                 SendMessage sendMessage2 = new SendMessage();
                 sendMessage2.setChatId(update.getCallbackQuery().getMessage().getChatId().toString());
                 sendMessage2.setText(Parser.parseWeather(OpenWeatherMapJsonParser.downloadJsonRawData("620391")));
-                sendMsg(sendMessage2);
+                sendMessage(sendMessage2);
 
                 break;
         }
