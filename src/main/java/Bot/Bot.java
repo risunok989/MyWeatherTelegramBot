@@ -73,36 +73,60 @@ public class Bot extends TelegramLongPollingBot {
 
     public void onUpdateReceived(Update update) {
 
-        if (update.hasMessage()) {
-            if (update.getMessage().hasText()) {
-                System.out.println();
-                System.err.println("ПРИШЛО СООБЩЕНИЕ");
-                //проверям на наличие символа
-                if (update.getMessage().getText().contains("/")) {
-                    beginCommandsSymbol(update);
-                } else if (update.getMessage().getText().equals("погода")) {
-                    try {
-                        execute(OpenWeatherMapJsonParser.selectCountry(update.getMessage().getChatId()));
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
-
-                }
+        if (update.hasMessage()){
+            CheckMessageType checkMessageType = getMassageType(update);
+            switch (checkMessageType){
+                case COMMAND: beginCommandsSymbol(update);
+                break;
+                case IMAGE: sendMessage(update.getMessage().getChatId(), "Ещё не работает");
+                break;
+                case TEXT: 
+                    break;
             }
-        } else if (update.hasCallbackQuery()) {
-            try {
-                try {
-                    processCallbackQuerry(update.getCallbackQuery().getMessage().getChatId(), update);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
         }
+//        if (update.hasMessage()) {
+//            if (update.getMessage().hasText()) {
+//                System.out.println();
+//                System.err.println("ПРИШЛО СООБЩЕНИЕ");
+//                //проверям на наличие символа
+//                if (update.getMessage().getText().contains("/")) {
+//                    beginCommandsSymbol(update);
+//                } else if (update.getMessage().getText().equals("погода")) {
+//                    try {
+//                        execute(OpenWeatherMapJsonParser.selectCountry(update.getMessage().getChatId()));
+//                    } catch (TelegramApiException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//            }
+//        } else if (update.hasCallbackQuery()) {
+//            try {
+//                try {
+//                    processCallbackQuerry(update.getCallbackQuery().getMessage().getChatId(), update);
+//                } catch (TelegramApiException e) {
+//                    e.printStackTrace();
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
     }
+    // проверка собщения на ТИП
+    private CheckMessageType getMassageType (Update update){
+        CheckMessageType checkMessageType = null;
+        if (update.getMessage().getPhoto() != null)
+            checkMessageType = CheckMessageType.IMAGE;
+        else if (update.getMessage().getText() != null)
+            checkMessageType = (update.getMessage().getText().matches("^/[\\w]*$")) ?
+                    CheckMessageType.COMMAND :
+                    CheckMessageType.TEXT;
+        if (checkMessageType == null)
+            throw new IllegalArgumentException(update.toString());
 
+        return checkMessageType;
+    }
 
     public void beginCommandsSymbol(Update update) {
         switch (update.getMessage().getText()) {

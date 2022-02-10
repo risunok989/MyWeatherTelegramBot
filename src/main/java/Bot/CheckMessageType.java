@@ -1,6 +1,6 @@
 package Bot;
 
-public  enum CheckMessageType {
+public enum CheckMessageType {
     TEXT,
     IMAGE,
     COMMAND
