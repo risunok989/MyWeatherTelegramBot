@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class BotSetting {
+    private BotSetting() {
+    } // приватный конструктор, чтобы доступ к нему был закрыть за пределами класса,
+    // тогда он не сможет возвращать новые объекты
 
     /*
     В классе BotSettings используется порождающий шаблон
@@ -14,7 +17,7 @@ public class BotSetting {
      */
 
     public static final String PATH_TO_PROPERTIES = "src/main/resources/config.properties";
-    private static BotSetting instance;
+    private static BotSetting instance; //приватное статическое поле, содержащее одиночный объект
     private Properties properties;
     private String token;
     private String userName;
@@ -28,8 +31,8 @@ public class BotSetting {
         return userName;
     }
 
-    public static BotSetting getInstance() {
-
+    public static BotSetting getInstance() { //статический создающий метод
+        // , который будет использоваться для получения одиночки
 
         if (instance == null)
             instance = new BotSetting();
@@ -52,11 +55,11 @@ public class BotSetting {
             }
             token = properties.getProperty("tokenBot");
             if (token == null) {
-                throw new RuntimeException("Token value is null");
+                throw new RuntimeException("Token value is NULL");
             }
             userName = properties.getProperty("nameBot");
             if (userName == null)
-                throw new RuntimeException("UserName value is null");
+                throw new RuntimeException("UserName value is NULL");
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
