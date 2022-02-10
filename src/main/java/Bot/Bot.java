@@ -126,12 +126,11 @@ public class Bot extends TelegramLongPollingBot {
         if (update.getMessage().getPhoto() != null) {
             checkMessageType = CheckMessageType.IMAGE;
         } else if (update.getMessage().getText() != null) {
-            checkMessageType = (update.getMessage().getText().contains("/")) ?
-                    CheckMessageType.COMMAND :
-                    CheckMessageType.TEXT;
-            checkMessageType = (update.getMessage().getText().contains("Попить")) ?
-                    CheckMessageType.POPIT :
-                    CheckMessageType.TEXT;
+            if ((update.getMessage().getText().contains("/"))) {
+                checkMessageType = CheckMessageType.COMMAND;
+            } else if ((update.getMessage().getText().contains("Попить"))) {
+                checkMessageType = CheckMessageType.POPIT;
+            }
         }
 
         if (checkMessageType == null)
