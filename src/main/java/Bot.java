@@ -2,7 +2,9 @@ import WatherParser.OpenWeatherMapJsonParser;
 import WatherParser.Parser;
 import org.json.simple.parser.ParseException;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMediaGroup;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -15,19 +17,19 @@ import java.util.List;
 import java.util.Properties;
 
 
-public  class Bot extends TelegramLongPollingBot {
+public class Bot extends TelegramLongPollingBot {
 
     private final static BotSetting botSettings = BotSetting.getInstance();
 
     public String getBotUsername() {
-         return botSettings.getUserName();
+        return botSettings.getUserName();
     }
 
     public String getBotToken() {
         return botSettings.getToken();
     }
 
-    public  void sendMsg(SendMessage sendMessage) {
+    public void sendMsg(SendMessage sendMessage) {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
@@ -35,8 +37,20 @@ public  class Bot extends TelegramLongPollingBot {
         }
     }
 
+    public void sendMessage(Long chatId, String message) {
+        SendMessage sendMessage = SendMessage
+                .builder()
+                .chatId(chatId.toString())
+                .text(message)
+                .build();
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
 
-    InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+            InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
     private static final String beginCommandSymbol = "/";
     private static final String getStartCommandName = "start";
@@ -44,7 +58,6 @@ public  class Bot extends TelegramLongPollingBot {
     private static final String getHelpCommandName = "help";
     private static final String getWeatherName = "weather";
     private static final String getNewsName = "news";
-
 
 
     public void onUpdateReceived(Update update) {
@@ -57,7 +70,7 @@ public  class Bot extends TelegramLongPollingBot {
                 //проверям на наличие символа
                 if (update.getMessage().getText().contains("/")) {
                     beginCommandsSymbol(update);
-                }else if (update.getMessage().getText().equals("погода")){
+                } else if (update.getMessage().getText().equals("погода")) {
                     try {
                         execute(OpenWeatherMapJsonParser.selectCountry(update.getMessage().getChatId()));
                     } catch (TelegramApiException e) {
@@ -81,7 +94,7 @@ public  class Bot extends TelegramLongPollingBot {
     }
 
 
-    public  void beginCommandsSymbol(Update update) {
+    public void beginCommandsSymbol(Update update) {
         switch (update.getMessage().getText()) {
             case "/help":
                 sendMsg(proccesHelpCommand(update.getMessage().getChatId()));
@@ -130,39 +143,39 @@ public  class Bot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatID.toString());
         sendMessage.setText("Если возникли какие-либо проблемы писать фидбэк @br0dos.");
-       return sendMessage;
+        return sendMessage;
     }
 
     public SendMessage processStopCommand(Long chatID) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatID.toString());
         sendMessage.setText("Не, так не работает, зай.\nПопробуй ещё раз '/start'");
-       return sendMessage;
+        return sendMessage;
     }
 
     public void processCallbackQuerry(long chatID, Update update) throws IOException, TelegramApiException {
         System.err.println("processCallbackQuerry");
 
 
-        switch (update.getCallbackQuery().getData()){
-            case getWeatherName :
+        switch (update.getCallbackQuery().getData()) {
+            case getWeatherName:
                 execute(OpenWeatherMapJsonParser.selectCountry(update.getCallbackQuery().getMessage().getChatId()));
                 break;
-            case getNewsName :
+            case getNewsName:
                 SendMessage sendMessage = new SendMessage();
                 sendMessage.setChatId(update.getCallbackQuery().getMessage().getChatId().toString());
                 execute(sendMessage);
                 break;
-            case "626081" :
+            case "626081":
                 SendMessage sendMessage1 = new SendMessage();
                 sendMessage1.setChatId(update.getCallbackQuery().getMessage().getChatId().toString());
-                    sendMessage1.setText(Parser.parseWeather(OpenWeatherMapJsonParser.downloadJsonRawData("626081")));
+                sendMessage1.setText(Parser.parseWeather(OpenWeatherMapJsonParser.downloadJsonRawData("626081")));
                 sendMsg(sendMessage1);
 
                 break;
-            case "620391" :
+            case "620391":
                 SendMessage sendMessage2 = new SendMessage();
-                    sendMessage2.setChatId(update.getCallbackQuery().getMessage().getChatId().toString());
+                sendMessage2.setChatId(update.getCallbackQuery().getMessage().getChatId().toString());
                 sendMessage2.setText(Parser.parseWeather(OpenWeatherMapJsonParser.downloadJsonRawData("620391")));
                 sendMsg(sendMessage2);
 
