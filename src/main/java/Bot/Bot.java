@@ -15,6 +15,10 @@ import java.io.IOException;
 
 public class Bot extends TelegramLongPollingBot {
 
+    private static final long TIME_SPAM = 10;
+    private static long timeRunCount;
+    private  static long callbackCounter = 0;
+
     private final static BotSetting botSettings = BotSetting.getInstance();
 
     public String getBotUsername() {
@@ -34,7 +38,7 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendMessage(Long chatId, String message) {
+    public  void sendMessage(Long chatId, String message) {
         SendMessage sendMessage = SendMessage
                 .builder()
                 .chatId(chatId.toString())
@@ -60,7 +64,7 @@ public class Bot extends TelegramLongPollingBot {
 
 
     public void onUpdateReceived(Update update) {
-
+        System.out.println("ПРИШЛО СООБЩЕНИЕ");
         if (update.hasMessage()) {
             CheckMessageType checkMessageType = getMassageType(update);
             switch (checkMessageType) {
@@ -71,6 +75,7 @@ public class Bot extends TelegramLongPollingBot {
                     sendMessage(update.getMessage().getChatId(), "Ещё не работает");
                     break;
                 case TEXT:
+                    System.out.println("SEND TEXT");
                     break;
                 case POPIT:
                     sendMessage(update.getMessage().getChatId(), "ПОПИТЬ");
@@ -79,6 +84,7 @@ public class Bot extends TelegramLongPollingBot {
 
             }
         } else if (update.hasCallbackQuery()) {
+
             try {
                 try {
                     processCallbackQuerry(update.getCallbackQuery().getMessage().getChatId(), update);
@@ -122,6 +128,8 @@ public class Bot extends TelegramLongPollingBot {
 
     // проверка собщения на ТИП
     private CheckMessageType getMassageType(Update update) {
+
+
         CheckMessageType checkMessageType = null;
         if (update.getMessage().getPhoto() != null) {
             checkMessageType = CheckMessageType.IMAGE;
@@ -130,6 +138,12 @@ public class Bot extends TelegramLongPollingBot {
                 checkMessageType = CheckMessageType.COMMAND;
             } else if ((update.getMessage().getText().contains("Попить"))) {
                 checkMessageType = CheckMessageType.POPIT;
+            } else {
+                Command.setAfter(0);
+                Command.setBefore(0);
+                Command.setCallbackCounter(0);
+                Command.setTimeRunCount(0);
+                checkMessageType = CheckMessageType.TEXT;
             }
         }
 
@@ -158,6 +172,8 @@ public class Bot extends TelegramLongPollingBot {
     public void processCallbackQuerry(long chatID, Update update) throws IOException, TelegramApiException {
         System.err.println("processCallbackQuerry");
 
+        callbackCounter++;
+        long before = System.currentTimeMillis();
 
         switch (update.getCallbackQuery().getData()) {
             case Command.WEATHER_NAME:
@@ -180,6 +196,23 @@ public class Bot extends TelegramLongPollingBot {
                 sendMessage(sendMessage2);
 
                 break;
+        }
+        long after = System.currentTimeMillis();
+        long now = after - before;
+        if (now <= 10 && callbackCounter > 3){
+            sendMessage(update.getMessage().getChatId(), "STOP SPAM");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            before = 0;
+            after = 0;
+            callbackCounter = 0;
+        }else {
+            before = 0;
+            after = 0;
+            callbackCounter = 0;
         }
 //
     }

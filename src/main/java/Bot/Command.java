@@ -4,6 +4,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import java.awt.image.ImagingOpException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +13,34 @@ public class Command {
 
     public static final String WEATHER_NAME = "weather";
     public static final String NEWS_NAME = "news";
+    private static final long TIME_SPAM = 10;
+    private static long timeRunCount;
+    private static long callbackCounter = 0;
+    private static long before = 0;
+    private static long after = 0;
 
+    public static void setTimeRunCount(long timeRunCount) {
+        Command.timeRunCount = timeRunCount;
+    }
+
+    public static void setCallbackCounter(long callbackCounter) {
+        Command.callbackCounter = callbackCounter;
+    }
+
+    public static void setBefore(long before) {
+        Command.before = before;
+    }
+
+    public static void setAfter(long after) {
+        Command.after = after;
+    }
 
     public static SendMessage processStartCommand(long chatID) {
         System.err.println("procces StartCommand");
+
+
+        before = System.currentTimeMillis();
+        callbackCounter++;
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
@@ -43,6 +68,21 @@ public class Command {
         sendMessage.setText("Добрый день! я Бот райончика. Выберете что Вам нужно? Если будут вопросы, спрашивайте через '/help'.");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
 
+        after = System.currentTimeMillis();
+        timeRunCount = after - before;
+        if (timeRunCount < 10 && callbackCounter > 3) {
+            System.out.println("SPAM");
+
+            sendMessage.setText("");
+            sendMessage.setChatId(String.valueOf(chatID));
+
+            return sendMessage;
+
+        } else {
+            before = 0;
+            after = 0;
+            timeRunCount = 0;
+        }
         return sendMessage;
     }
 
