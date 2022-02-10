@@ -1,8 +1,9 @@
+package Bot;
+
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 public class BotSetting {

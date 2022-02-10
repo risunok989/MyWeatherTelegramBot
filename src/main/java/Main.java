@@ -1,14 +1,8 @@
-import WatherParser.OpenWeatherMapJsonParser;
+import Bot.Bot;
 import org.json.simple.parser.ParseException;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.generics.BotSession;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
 
 import java.io.IOException;
 
