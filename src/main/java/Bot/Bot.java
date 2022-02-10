@@ -136,7 +136,7 @@ public class Bot extends TelegramLongPollingBot {
     public void beginCommandsSymbol(Update update) {
         switch (update.getMessage().getText()) {
             case "/help":
-                sendMessage(Command.proccesHelpCommand(update.getMessage().getChatId()));
+                sendMessage(Command.processHelpCommand(update.getMessage().getChatId()));
                 break;
             case "/start":
                 sendMessage(Command.setStartCommand(update.getMessage().getChatId()));

@@ -46,7 +46,7 @@ public class Command {
         return sendMessage;
     }
 
-    public static SendMessage proccesHelpCommand(Long chatID) {
+    public static SendMessage processHelpCommand(Long chatID) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatID.toString());
         sendMessage.setText("Если возникли какие-либо проблемы писать фидбэк @br0dos.");
