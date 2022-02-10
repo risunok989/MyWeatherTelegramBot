@@ -4,12 +4,15 @@ import org.json.simple.parser.ParseException;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMediaGroup;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,7 +53,18 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-            InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+    public void sendImage(Long chatID, String patch){
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setPhoto(new InputFile(new File(patch)));
+        sendPhoto.setChatId(chatID.toString());
+        try {
+            execute(sendPhoto);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
     private static final String beginCommandSymbol = "/";
     private static final String getStartCommandName = "start";
