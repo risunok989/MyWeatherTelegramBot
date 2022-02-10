@@ -59,9 +59,6 @@ public class Bot extends TelegramLongPollingBot {
     }
 
 
-
-
-
     public void onUpdateReceived(Update update) {
 
         if (update.hasMessage()) {
@@ -75,6 +72,11 @@ public class Bot extends TelegramLongPollingBot {
                     break;
                 case TEXT:
                     break;
+                case POPIT:
+                    sendMessage(update.getMessage().getChatId(), "ПОПИТЬ");
+                    sendMessage(update.getMessage().getChatId(), "ПАПИТЬ");
+                    sendMessage(update.getMessage().getChatId(), "POP'IT");
+
             }
         } else if (update.hasCallbackQuery()) {
             try {
@@ -121,12 +123,17 @@ public class Bot extends TelegramLongPollingBot {
     // проверка собщения на ТИП
     private CheckMessageType getMassageType(Update update) {
         CheckMessageType checkMessageType = null;
-        if (update.getMessage().getPhoto() != null)
+        if (update.getMessage().getPhoto() != null) {
             checkMessageType = CheckMessageType.IMAGE;
-        else if (update.getMessage().getText() != null)
-            checkMessageType = (update.getMessage().getText().matches("^/[\\w]*$")) ?
+        } else if (update.getMessage().getText() != null) {
+            checkMessageType = (update.getMessage().getText().contains("/")) ?
                     CheckMessageType.COMMAND :
                     CheckMessageType.TEXT;
+            checkMessageType = (update.getMessage().getText().contains("Попить")) ?
+                    CheckMessageType.POPIT :
+                    CheckMessageType.TEXT;
+        }
+
         if (checkMessageType == null)
             throw new IllegalArgumentException(update.toString());
 
@@ -139,7 +146,7 @@ public class Bot extends TelegramLongPollingBot {
                 sendMessage(Command.processHelpCommand(update.getMessage().getChatId()));
                 break;
             case "/start":
-                sendMessage(Command.setStartCommand(update.getMessage().getChatId()));
+                sendMessage(Command.processStartCommand(update.getMessage().getChatId()));
                 break;
             case "/stop":
                 sendMessage(Command.processStopCommand(update.getMessage().getChatId()));
@@ -147,11 +154,6 @@ public class Bot extends TelegramLongPollingBot {
         }
 
     }
-
-
-
-
-
 
 
     public void processCallbackQuerry(long chatID, Update update) throws IOException, TelegramApiException {

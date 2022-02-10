@@ -10,11 +10,11 @@ import java.util.List;
 
 public class Command {
 
-    public static final  String WEATHER_NAME = "weather";
+    public static final String WEATHER_NAME = "weather";
     public static final String NEWS_NAME = "news";
 
 
-    public static SendMessage setStartCommand(long chatID) {
+    public static SendMessage processStartCommand(long chatID) {
         System.err.println("procces StartCommand");
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
