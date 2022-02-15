@@ -11,13 +11,17 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 
 public class Bot extends TelegramLongPollingBot {
 
+    public long userID;
+    public long userTimeSendMessage;
+
     private static final long TIME_SPAM = 10;
     private static long timeRunCount;
-    private  static long callbackCounter = 0;
+    private static long callbackCounter = 0;
 
     private final static BotSetting botSettings = BotSetting.getInstance();
 
@@ -38,7 +42,7 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    public  void sendMessage(Long chatId, String message) {
+    public void sendMessage(Long chatId, String message) {
         SendMessage sendMessage = SendMessage
                 .builder()
                 .chatId(chatId.toString())
@@ -66,6 +70,7 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         System.out.println("ПРИШЛО СООБЩЕНИЕ");
         if (update.hasMessage()) {
+
             CheckMessageType checkMessageType = getMassageType(update);
             switch (checkMessageType) {
                 case COMMAND:
@@ -139,10 +144,8 @@ public class Bot extends TelegramLongPollingBot {
             } else if ((update.getMessage().getText().contains("Попить"))) {
                 checkMessageType = CheckMessageType.POPIT;
             } else {
-                Command.setAfter(0);
-                Command.setBefore(0);
-                Command.setCallbackCounter(0);
-                Command.setTimeRunCount(0);
+                callbackCounter = 0; // присвоение счётчику CallbackCounter = 0
+                System.out.println("CallbackCounter " + callbackCounter);
                 checkMessageType = CheckMessageType.TEXT;
             }
         }
@@ -154,17 +157,25 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public void beginCommandsSymbol(Update update) {
-        switch (update.getMessage().getText()) {
-            case "/help":
-                sendMessage(Command.processHelpCommand(update.getMessage().getChatId()));
-                break;
-            case "/start":
-                sendMessage(Command.processStartCommand(update.getMessage().getChatId()));
-                break;
-            case "/stop":
-                sendMessage(Command.processStopCommand(update.getMessage().getChatId()));
-                break;
+        callbackCounter++;
+
+        if (callbackCounter < 2){
+            switch (update.getMessage().getText()) {
+                case "/help":
+                    sendMessage(Command.processHelpCommand(update.getMessage().getChatId()));
+                    break;
+                case "/start":
+                    sendMessage(Command.processStartCommand(update.getMessage().getChatId()));
+
+                    break;
+                case "/stop":
+                    sendMessage(Command.processStopCommand(update.getMessage().getChatId()));
+                    break;
+            }
+        }else {
+            sendMessage(update.getMessage().getChatId(), "");
         }
+
 
     }
 
@@ -173,46 +184,34 @@ public class Bot extends TelegramLongPollingBot {
         System.err.println("processCallbackQuerry");
 
         callbackCounter++;
-        long before = System.currentTimeMillis();
 
-        switch (update.getCallbackQuery().getData()) {
-            case Command.WEATHER_NAME:
-                execute(OpenWeatherMapJsonParser.selectCountry(update.getCallbackQuery().getMessage().getChatId()));
-                break;
-            case Command.NEWS_NAME:
-                sendMessage(update.getCallbackQuery().getMessage().getChatId(), "Ешё не работает");
-                break;
-            case "626081":
-                SendMessage sendMessage1 = new SendMessage();
-                sendMessage1.setChatId(update.getCallbackQuery().getMessage().getChatId().toString());
-                sendMessage1.setText(Parser.parseWeather(OpenWeatherMapJsonParser.downloadJsonRawData("626081")));
-                sendMessage(sendMessage1);
+        if (callbackCounter <= 4) {   // счётчик спама для Callback
 
-                break;
-            case "620391":
-                SendMessage sendMessage2 = new SendMessage();
-                sendMessage2.setChatId(update.getCallbackQuery().getMessage().getChatId().toString());
-                sendMessage2.setText(Parser.parseWeather(OpenWeatherMapJsonParser.downloadJsonRawData("620391")));
-                sendMessage(sendMessage2);
+            switch (update.getCallbackQuery().getData()) {
+                case Command.WEATHER_NAME:
+                    execute(OpenWeatherMapJsonParser.selectCountry(update.getCallbackQuery().getMessage().getChatId()));
+                    break;
+                case Command.NEWS_NAME:
+                    sendMessage(update.getCallbackQuery().getMessage().getChatId(), "Ешё не работает");
+                    break;
+                case "626081":
+                    SendMessage sendMessage1 = new SendMessage();
+                    sendMessage1.setChatId(update.getCallbackQuery().getMessage().getChatId().toString());
+                    sendMessage1.setText(Parser.parseWeather(OpenWeatherMapJsonParser.downloadJsonRawData("626081")));
+                    sendMessage(sendMessage1);
 
-                break;
-        }
-        long after = System.currentTimeMillis();
-        long now = after - before;
-        if (now <= 10 && callbackCounter > 3){
-            sendMessage(update.getMessage().getChatId(), "STOP SPAM");
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                    break;
+                case "620391":
+                    SendMessage sendMessage2 = new SendMessage();
+                    sendMessage2.setChatId(update.getCallbackQuery().getMessage().getChatId().toString());
+                    sendMessage2.setText(Parser.parseWeather(OpenWeatherMapJsonParser.downloadJsonRawData("620391")));
+                    sendMessage(sendMessage2);
+
+                    break;
             }
-            before = 0;
-            after = 0;
-            callbackCounter = 0;
         }else {
-            before = 0;
-            after = 0;
-            callbackCounter = 0;
+            sendMessage(update.getMessage().getChatId(), "");
+            System.out.println("callbackCounter " + callbackCounter);
         }
 //
     }
@@ -233,6 +232,10 @@ public class Bot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean checkSpamUsser() {
+        return true;
     }
 
 }

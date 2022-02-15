@@ -35,12 +35,14 @@ public class Command {
         Command.after = after;
     }
 
+    public static long getCallbackCounter() {
+        return callbackCounter;
+    }
+
     public static SendMessage processStartCommand(long chatID) {
         System.err.println("procces StartCommand");
 
 
-        before = System.currentTimeMillis();
-        callbackCounter++;
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
@@ -68,34 +70,19 @@ public class Command {
         sendMessage.setText("Добрый день! я Бот райончика. Выберете что Вам нужно? Если будут вопросы, спрашивайте через '/help'.");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
 
-        after = System.currentTimeMillis();
-        timeRunCount = after - before;
-        if (timeRunCount < 10 && callbackCounter > 3) {
-            System.out.println("SPAM");
-
-            sendMessage.setText("");
-            sendMessage.setChatId(String.valueOf(chatID));
-
-            return sendMessage;
-
-        } else {
-            before = 0;
-            after = 0;
-            timeRunCount = 0;
-        }
         return sendMessage;
     }
 
-    public static SendMessage processHelpCommand(Long chatID) {
+    public static SendMessage processHelpCommand(long chatID) {
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatID.toString());
+        sendMessage.setChatId(String.valueOf(chatID));
         sendMessage.setText("Если возникли какие-либо проблемы писать фидбэк @br0dos.");
         return sendMessage;
     }
 
-    public static SendMessage processStopCommand(Long chatID) {
+    public static SendMessage processStopCommand(long chatID) {
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatID.toString());
+        sendMessage.setChatId(String.valueOf(chatID));
         sendMessage.setText("Не, так не работает, зай.\nПопробуй ещё раз '/start'");
         return sendMessage;
     }
