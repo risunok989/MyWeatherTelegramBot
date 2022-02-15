@@ -1,5 +1,6 @@
 package Bot;
 
+import Bot.Keyboard.InlineKeyboardMarkupBuilder;
 import WatherParser.OpenWeatherMapJsonParser;
 import WatherParser.Parser;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -16,11 +17,10 @@ import java.util.concurrent.TimeUnit;
 
 public class Bot extends TelegramLongPollingBot {
 
-    public long userID;
-    public long userTimeSendMessage;
+    private long userID;
+    private String userMessage;
 
-    private static final long TIME_SPAM = 10;
-    private static long timeRunCount;
+
     private static long callbackCounter = 0;
 
     private final static BotSetting botSettings = BotSetting.getInstance();
@@ -33,7 +33,7 @@ public class Bot extends TelegramLongPollingBot {
         return botSettings.getToken();
     }
 
-
+// отправка сообщений
     public void sendMessage(SendMessage sendMessage) {
         try {
             execute(sendMessage);
@@ -65,7 +65,7 @@ public class Bot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-
+//
 
     public void onUpdateReceived(Update update) {
         System.out.println("ПРИШЛО СООБЩЕНИЕ");
@@ -77,10 +77,11 @@ public class Bot extends TelegramLongPollingBot {
                     beginCommandsSymbol(update);
                     break;
                 case IMAGE:
-                    sendMessage(update.getMessage().getChatId(), "Ещё не работает");
+                    sendMessage(update.getMessage().getChatId(), "Ещё не работаю с фотографиями, скоро.");
                     break;
                 case TEXT:
-                    System.out.println("SEND TEXT");
+                    this.userID = update.getMessage().getChatId();
+                    this.userMessage = update.getMessage().getText();
                     break;
                 case POPIT:
                     sendMessage(update.getMessage().getChatId(), "ПОПИТЬ");
@@ -102,34 +103,6 @@ public class Bot extends TelegramLongPollingBot {
 
         }
     }
-//        if (update.hasMessage()) {
-//            if (update.getMessage().hasText()) {
-//                System.out.println();
-//                System.err.println("ПРИШЛО СООБЩЕНИЕ");
-//                //проверям на наличие символа
-//                if (update.getMessage().getText().contains("/")) {
-//                    beginCommandsSymbol(update);
-//                } else if (update.getMessage().getText().equals("погода")) {
-//                    try {
-//                        execute(OpenWeatherMapJsonParser.selectCountry(update.getMessage().getChatId()));
-//                    } catch (TelegramApiException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//            }
-//        } else if (update.hasCallbackQuery()) {
-//            try {
-//                try {
-//                    processCallbackQuerry(update.getCallbackQuery().getMessage().getChatId(), update);
-//                } catch (TelegramApiException e) {
-//                    e.printStackTrace();
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
 
     // проверка собщения на ТИП
     private CheckMessageType getMassageType(Update update) {
@@ -162,7 +135,7 @@ public class Bot extends TelegramLongPollingBot {
         if (callbackCounter < 2){
             switch (update.getMessage().getText()) {
                 case "/help":
-                    sendMessage(Command.processHelpCommand(update.getMessage().getChatId()));
+                    sendMessage(test(update.getMessage().getChatId()));
                     break;
                 case "/start":
                     sendMessage(Command.processStartCommand(update.getMessage().getChatId()));
@@ -216,26 +189,16 @@ public class Bot extends TelegramLongPollingBot {
 //
     }
 
-    public void popit(long chatID, String message) {
-        System.err.println("grimacingUser (ПОПИТЬ)");
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(String.valueOf(chatID));
-        sendMessage.setText("ПОПИТЬ");
-        try {
-            execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-        sendMessage.setText("POP'IT");
-        try {
-            execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean checkSpamUsser() {
-        return true;
+    public SendMessage test (Long chatID){
+        return InlineKeyboardMarkupBuilder.create(chatID)
+                .setText("ffff")
+                .row()
+                .button("test1", "test1")
+                .endRow()
+                .row()
+                .button("test2", "test2")
+                .endRow()
+                .build();
     }
 
 }

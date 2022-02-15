@@ -13,36 +13,10 @@ public class Command {
 
     public static final String WEATHER_NAME = "weather";
     public static final String NEWS_NAME = "news";
-    private static final long TIME_SPAM = 10;
-    private static long timeRunCount;
-    private static long callbackCounter = 0;
-    private static long before = 0;
-    private static long after = 0;
 
-    public static void setTimeRunCount(long timeRunCount) {
-        Command.timeRunCount = timeRunCount;
-    }
-
-    public static void setCallbackCounter(long callbackCounter) {
-        Command.callbackCounter = callbackCounter;
-    }
-
-    public static void setBefore(long before) {
-        Command.before = before;
-    }
-
-    public static void setAfter(long after) {
-        Command.after = after;
-    }
-
-    public static long getCallbackCounter() {
-        return callbackCounter;
-    }
 
     public static SendMessage processStartCommand(long chatID) {
         System.err.println("procces StartCommand");
-
-
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
