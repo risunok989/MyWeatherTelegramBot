@@ -28,6 +28,11 @@ public class WeatherUtil {
         weatherIconsCodes.put("50d", EmojiParser.parseToUnicode(":fog:"));
         weatherIconsCodes.put("50n", EmojiParser.parseToUnicode(":fog:"));
 
+
+        weatherIconsCodes.put("rainbow",EmojiParser.parseToUnicode(":rainbow:"));
+        weatherIconsCodes.put("newspaper", EmojiParser.parseToUnicode(":newspaper:"));
+        weatherIconsCodes.put("underage", EmojiParser.parseToUnicode(":underage:"));
+
     }
 
 

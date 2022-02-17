@@ -1,5 +1,6 @@
 package WatherParser;
 
+import Bot.Keyboard.InlineKeyboardMarkupBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -99,7 +100,13 @@ public class OpenWeatherMapJsonParser implements WatherParser {
         sendMessage.setText("Выберите один из городов. Пока только так.");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup1);
 
-        return sendMessage;
+        return InlineKeyboardMarkupBuilder.create(chatID)
+                .setText("Выберете из городов.")
+                .row()
+                .button("Лида", "626081")
+                .button("Волковыск", "620391")
+                .endRow()
+                .build();
     }
 
 

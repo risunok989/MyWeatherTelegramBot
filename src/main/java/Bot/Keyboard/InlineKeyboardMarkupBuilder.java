@@ -14,7 +14,9 @@ public class InlineKeyboardMarkupBuilder implements KeyboardMarkupBuilder {
     private Long chatId;
     private String text;
 
+    // первый ряд
     private List<InlineKeyboardButton> row = null;
+    // второй ряд (массив массивов!)
     private final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
 
     private InlineKeyboardMarkupBuilder() {
@@ -41,12 +43,14 @@ public class InlineKeyboardMarkupBuilder implements KeyboardMarkupBuilder {
         return builder;
     }
 
+    // создания массива (ПЕРВОГО РЯДА)
     @Override
     public InlineKeyboardMarkupBuilder row() {
         this.row = new ArrayList<>();
         return this;
     }
 
+    // создание КНОПОК (1. НАЗВАНИЕ, 2. CallBackData!!!!) и добавление в массив (ПЕРВЫЙ РЯД)
     public InlineKeyboardMarkupBuilder button(String text, String callbackData) {
         InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
         inlineKeyboardButton.setText(text);
@@ -55,6 +59,7 @@ public class InlineKeyboardMarkupBuilder implements KeyboardMarkupBuilder {
         return this;
     }
 
+    // добавление в МАССИВ-МАССИВОВ "keyboard" МАССИВ row
     @Override
     public InlineKeyboardMarkupBuilder endRow() {
         this.keyboard.add(this.row);
@@ -70,7 +75,7 @@ public class InlineKeyboardMarkupBuilder implements KeyboardMarkupBuilder {
         sendMessage.setChatId(chatId.toString());
         sendMessage.setText(text);
         sendMessage.setReplyMarkup(keyboardMarkup);
-    return sendMessage;
+        return sendMessage;
     }
 
     public EditMessageText rebuild(Long messageId) {
