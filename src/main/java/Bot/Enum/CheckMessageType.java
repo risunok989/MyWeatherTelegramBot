@@ -1,4 +1,5 @@
-package Bot;
+package Bot.Enum;
+
 
 public enum CheckMessageType {
     TEXT,

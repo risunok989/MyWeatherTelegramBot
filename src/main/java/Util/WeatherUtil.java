@@ -33,6 +33,9 @@ public class WeatherUtil {
         weatherIconsCodes.put("newspaper", EmojiParser.parseToUnicode(":newspaper:"));
         weatherIconsCodes.put("underage", EmojiParser.parseToUnicode(":underage:"));
 
+        weatherIconsCodes.put("by", EmojiParser.parseToUnicode(":by:"));
+        weatherIconsCodes.put("chile", EmojiParser.parseToUnicode(":chile:"));
+
     }
 
 
