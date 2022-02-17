@@ -13,21 +13,21 @@ import java.util.Collections;
 import java.util.List;
 
 public  class Answer {
-//
-//    // Создаем обьект разметки клавиатуры ( создание клавиатуры)
-//    InlineKeyboardMarkup inlineKeyboardMarkup =new InlineKeyboardMarkup();
-//
-//public void  setInlineKeyboard(){
-//    InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton(); // выстраиваем положение кнопок
-//    inlineKeyboardButton.setText("ТЫКНИ МЕНЯ1"); // Текст (Что будет написано на самой кнопке)
-//    inlineKeyboardButton.setCallbackData("Button \\\"ТЫКНИ МЕНЯ1\\\" has been pressed"); // Что будет отсылатся серверу при нажатии на кнопку
-//
-//    // создаём list кнопок
-//    List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-//    keyboardButtonsRow1.add(inlineKeyboardButton);
-//
-//    inlineKeyboardMarkup.setKeyboard(Collections.singletonList(keyboardButtonsRow1));
-//}
+
+    // Создаем обьект разметки клавиатуры ( создание клавиатуры)
+    InlineKeyboardMarkup inlineKeyboardMarkup =new InlineKeyboardMarkup();
+
+public void  setInlineKeyboard(){
+    InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton(); // выстраиваем положение кнопок
+    inlineKeyboardButton.setText("ТЫКНИ МЕНЯ1"); // Текст (Что будет написано на самой кнопке)
+    inlineKeyboardButton.setCallbackData("Button \\\"ТЫКНИ МЕНЯ1\\\" has been pressed"); // Что будет отсылатся серверу при нажатии на кнопку
+
+    // создаём list кнопок
+    List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+    keyboardButtonsRow1.add(inlineKeyboardButton);
+
+    inlineKeyboardMarkup.setKeyboard(Collections.singletonList(keyboardButtonsRow1));
+}
 
     public static String setMessageKeyboardToStart(String msg) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();

@@ -1,6 +1,7 @@
 package Bot;
 
 import Bot.Keyboard.InlineKeyboardMarkupBuilder;
+import Bot.Keyboard.ReplyKeyboardMarkupBuilder;
 import WatherParser.OpenWeatherMapJsonParser;
 import WatherParser.Parser;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -33,7 +34,7 @@ public class Bot extends TelegramLongPollingBot {
         return botSettings.getToken();
     }
 
-// отправка сообщений
+    // отправка сообщений
     public void sendMessage(SendMessage sendMessage) {
         try {
             execute(sendMessage);
@@ -132,10 +133,10 @@ public class Bot extends TelegramLongPollingBot {
     public void beginCommandsSymbol(Update update) {
         callbackCounter++;
 
-        if (callbackCounter < 2){
+        if (callbackCounter < 2) {
             switch (update.getMessage().getText()) {
                 case "/help":
-                    sendMessage(test(update.getMessage().getChatId()));
+                    sendMessage(test2(update.getMessage().getChatId()));
                     break;
                 case "/start":
                     sendMessage(Command.processStartCommand(update.getMessage().getChatId()));
@@ -145,7 +146,7 @@ public class Bot extends TelegramLongPollingBot {
                     sendMessage(Command.processStopCommand(update.getMessage().getChatId()));
                     break;
             }
-        }else {
+        } else {
             sendMessage(update.getMessage().getChatId(), "");
         }
 
@@ -182,14 +183,14 @@ public class Bot extends TelegramLongPollingBot {
 
                     break;
             }
-        }else {
+        } else {
             sendMessage(update.getMessage().getChatId(), "");
             System.out.println("callbackCounter " + callbackCounter);
         }
 //
     }
 
-    public SendMessage test (Long chatID){
+    public SendMessage test(Long chatID) {
         return InlineKeyboardMarkupBuilder.create(chatID)
                 .setText("ffff")
                 .row()
@@ -201,6 +202,14 @@ public class Bot extends TelegramLongPollingBot {
                 .build();
     }
 
+    public SendMessage test2(Long chatID) {
+       return ReplyKeyboardMarkupBuilder.create(chatID)
+                .setText("test")
+               .row()
+               .button("fdfdf")
+               .endRow()
+               .build();
+    }
 }
 
 
