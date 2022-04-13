@@ -2,14 +2,12 @@ package Bot;
 
 import Bot.Enum.CheckCommandType;
 import Bot.Enum.CheckMessageType;
-import Bot.Keyboard.InlineKeyboardMarkupBuilder;
-import Bot.Keyboard.ReplyKeyboardMarkupBuilder;
 import WatherParser.JsonDownloadForOpenWeather;
 import WatherParser.JsonParser;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.*;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -29,7 +27,11 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public String getBotToken() {
-        return botSettings.getToken();
+        return botSettings.getTokenBot();
+    }
+
+    public static String getTokenWeather() {
+        return botSettings.getTokenWeather();
     }
 
     // отправка сообщений
@@ -53,12 +55,28 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
+
+    //    public void sendMessage() {
+//        SendMessage sendMessage = new SendMessage();
+//        sendMessage.
+//    }
     public void sendImage(Long chatID, String patch) {
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setPhoto(new InputFile(new File(patch)));
         sendPhoto.setChatId(chatID.toString());
         try {
             execute(sendPhoto);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendSticker(Update update, String sticker_file_id) {
+        String chatId = update.getMessage().getChatId().toString();
+        InputFile stickerFile = new InputFile(sticker_file_id);
+        SendSticker sendSticker = new SendSticker(chatId, stickerFile);
+        try {
+            execute(sendSticker);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -97,6 +115,7 @@ public class Bot extends TelegramLongPollingBot {
 
         }
     }
+
     // проверка собщения на ТИП
     private CheckMessageType getMassageType(Update update) {
         CheckMessageType checkMessageType = null;
@@ -159,15 +178,15 @@ public class Bot extends TelegramLongPollingBot {
 //
     }
 
-
-
     public void beginCommandsSymbol(Update update) {
         callbackCounter++;
 
         if (callbackCounter < 2) {
             switch (update.getMessage().getText()) {
                 case CheckCommandType.HELP:
-                    sendMessage(Command.processHelpCommand(update.getMessage().getChatId()));
+                    sendMessage(update.getMessage().getChatId(), "Нет тебе помощи, " +
+                            update.getMessage().getChat().getUserName() + ")))");
+                    sendSticker(update, "CAACAgIAAxkBAAED9i9iDqDRH_CIewlIj8aO3qqSwVbdwAACQhAAAlRROUnST7kqXCnAyiME");
                     break;
                 case CheckCommandType.START:
                     sendMessage(Command.processStartCommand(update.getMessage().getChatId()));
@@ -183,27 +202,26 @@ public class Bot extends TelegramLongPollingBot {
 
     }
 
+    public void getUserInfo(Update update) {
+        long id;
+        String first_name;
+        String last_name;
+        String username;
 
-    public SendMessage test(Long chatID) {
-        return InlineKeyboardMarkupBuilder.create(chatID)
-                .setText("ffff")
-                .row()
-                .button("test1", "test1")
-                .endRow()
-                .row()
-                .button("test2", "test2")
-                .endRow()
-                .build();
+        System.out.println(update.getMessage().getChat().getFirstName());
+
+        id = update.getMessage().getChat().getId();
+        first_name = update.getMessage().getChat().getFirstName();
+        last_name = update.getMessage().getChat().getLastName();
+        username = update.getMessage().getChat().getUserName();
+        System.out.println(update.getMessage().getMessageId().toString());
+        Message message = new Message();
+
+        System.out.println("first_name " + first_name + " last_name " + last_name +
+                " username" + username);
     }
 
-    public SendMessage test2(Long chatID) {
-        return ReplyKeyboardMarkupBuilder.create(chatID)
-                .setText("test")
-                .row()
-                .button("fdfdf")
-                .endRow()
-                .build();
-    }
+
 }
 
 

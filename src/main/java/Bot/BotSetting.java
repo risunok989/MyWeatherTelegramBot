@@ -1,7 +1,5 @@
 package Bot;
 
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -20,16 +18,21 @@ public class BotSetting {
     public static final String PATH_TO_PROPERTIES = "src/main/resources/config.properties";
     private static BotSetting instance; //приватное статическое поле, содержащее одиночный объект
     private Properties properties;
-    private String token;
+    private String tokenBot;
     private String userName;
-    private TelegramBotsApi telegramBotsApi;
+    private String tokenWeather;
+//    private TelegramBotsApi telegramBotsApi;
 
-    public String getToken() {
-        return token;
+    public String getTokenBot() {
+        return tokenBot;
     }
 
     public String getUserName() {
         return userName;
+    }
+
+    public String getTokenWeather() {
+        return tokenWeather;
     }
 
     public static BotSetting getInstance() { //статический создающий метод
@@ -54,13 +57,16 @@ public class BotSetting {
                     ioException.printStackTrace();
                 }
             }
-            token = properties.getProperty("tokenBot");
-            if (token == null) {
-                throw new RuntimeException("Token value is NULL");
+            tokenBot = properties.getProperty("tokenBot");
+            if (tokenBot == null) {
+                throw new RuntimeException("TokenBot value is NULL");
             }
             userName = properties.getProperty("nameBot");
             if (userName == null)
-                throw new RuntimeException("UserName value is NULL");
+                throw new RuntimeException("NameBot value is NULL");
+            tokenWeather = properties.getProperty("tokenWeather");
+            if (userName == null)
+                throw new RuntimeException("tokenWeather value is NULL");
         } catch (RuntimeException e) {
             e.printStackTrace();
         }

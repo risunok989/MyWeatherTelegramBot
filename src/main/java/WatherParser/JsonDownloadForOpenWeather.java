@@ -1,6 +1,8 @@
 package WatherParser;
 
 
+import Bot.Bot;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -11,7 +13,7 @@ public class JsonDownloadForOpenWeather {
 
 
     private static final String API_CALL_TEMPLATE = "https://api.openweathermap.org/data/2.5/weather?id=";
-    private final static String API_KEY_TEMPLATE = "&appid=7f9c8827806a797d89d37d20a9152291";
+    private final static String API_KEY_TEMPLATE = Bot.getTokenWeather();
     public static final String UNITS = "&units=metric";
     public static final String LANG = "&lang=ru";
     private final static DateTimeFormatter INPUT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -40,13 +42,6 @@ public class JsonDownloadForOpenWeather {
         }
         in.close();
 
-        try {
-            FileWriter file = new FileWriter("D:\\1/response-weather.json");
-            file.write(response.toString());
-            file.close();
-        } catch (Exception e) {
-            e.fillInStackTrace();
-        }
         System.out.println(response.toString());
         return response.toString();
     }

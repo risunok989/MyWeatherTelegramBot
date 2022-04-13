@@ -2,7 +2,12 @@ package Bot;
 
 import Bot.Keyboard.InlineKeyboardMarkupBuilder;
 import Util.WeatherUtil;
+import org.telegram.telegrambots.meta.api.methods.polls.SendPoll;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.bots.AbsSender;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Command {
@@ -108,6 +113,7 @@ public class Command {
 //        sendMessage.setChatId(String.valueOf(chatID));
 //        sendMessage.setText("Выберите один из городов. Пока только так.");
 //        sendMessage.setReplyMarkup(inlineKeyboardMarkup1);
+
 
         return InlineKeyboardMarkupBuilder.create(chatID)
                 .setText("Выберете из городов.")
