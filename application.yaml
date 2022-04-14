@@ -1,0 +1,5 @@
+telegram:
+  api-url: "https://api.telegram.org/"
+  webhook-path: https://dfffrrrrrr.herokuapp.com/
+  bot-name: @districts_bot
+  bot-token: 5010755474:AAGlTHFpfzE93HKn551tCYZ9MsCtaOJT_ME
