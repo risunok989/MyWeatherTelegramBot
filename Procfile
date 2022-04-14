@@ -1,1 +1,1 @@
-web: gunicorn wsgi:app    java $JAVA_OPTS -jar target/dependency/webapp-runner.jar --port $PORT target/*.war
+worker: java -Dserver.port=$PORT $JAVA_OPTS -jar target/*.jar
