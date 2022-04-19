@@ -1,17 +1,12 @@
 package WatherParser;
 
 import Util.WeatherUtil;
-import com.vdurmont.emoji.Emoji;
-import com.vdurmont.emoji.EmojiParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-
-import java.io.IOException;
-
-public class Parser {
+public class JsonParser {
                         // object//
     private static final String NAME_OBJECT = "name";  // город
                         // weather[0] //
@@ -32,7 +27,7 @@ public class Parser {
     private static final String GUST = "gust"; // порывы ветра
 
 
-    public static String parseWeather(String json) {
+    public static String parseWeatherJson(String json) {
         System.out.println("parseWeather()");
 
         JSONParser jsonParser = new JSONParser();

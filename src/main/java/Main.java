@@ -1,14 +1,8 @@
-import WatherParser.OpenWeatherMapJsonParser;
+import Bot.Bot;
 import org.json.simple.parser.ParseException;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.generics.BotSession;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
 
 import java.io.IOException;
 
@@ -23,32 +17,6 @@ public class Main {
             e.printStackTrace();
         }
 
-           }
-
-    public static String getBotTokenProp() {
-        try {
-
-            FileInputStream fileInputStream = new FileInputStream(PATH_TO_PROPERTIES);
-            Properties prop = new Properties();
-            prop.load(fileInputStream);
-            System.out.println("tokenBot");
-            return prop.getProperty("tokenBot");
-        } catch (IOException e) {
-            e.fillInStackTrace().toString();
-        }
-        return null;
     }
 
-    public static String genUserNameBot() {
-        try {
-            FileInputStream fileInputStream = new FileInputStream(PATH_TO_PROPERTIES);
-            Properties prop = new Properties();
-            prop.load(fileInputStream);
-            System.out.println("userNameBot");
-            return prop.getProperty("nameBot");
-        } catch (IOException e) {
-            e.fillInStackTrace().toString();
-        }
-        return null;
-    }
 }
